@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "apiruns-swagger"
+version = "0.0.1"
+description = "Swagger documentation for Apiruns projects."
+authors = ["Jose Salas <jose.salas@apiruns.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/apiruns/apiruns-swagger"
+repository = "https://github.com/apiruns/apiruns-swagger"
+documentation = "https://github.com/apiruns/apiruns-swagger"
+keywords = [
+    "Poetry",
+    "Apiruns",
+    "Packages",
+    "Swagger",
+    "Packaging",
+    "No-code",
+    "Low-code",
+]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+black = "^22.6.0"
+flake8 = "^4.0.1"
+pytest-cov = "^3.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
