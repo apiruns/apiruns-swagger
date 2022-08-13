@@ -1,4 +1,4 @@
-from apiruns_swagger.hello import hello_world
+from apiruns_swagger.transpirables import hello_world
 
 
 def test_call_hello():
