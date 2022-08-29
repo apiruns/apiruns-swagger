@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
+import json
 from apiruns_swagger.swagger import adapters
-from apiruns_swagger.swagger.adapters import TransForm
+from apiruns_swagger.swagger.adapters import TransFormOpenApi3
 
 
 class Convertible(ABC):
@@ -11,10 +12,10 @@ class Convertible(ABC):
     """
 
     @abstractmethod
-    def transform(self, xml: str) -> dict:
+    def transform(self, json_data: str) -> dict:
         """Abstract method in charge of regulating the transformation
-        :param xlm: Input format to transform
-        :return dict: transformed data
+        :param json_data: json to transform to dict
+        :return str: transformed data
         """
 
 
@@ -24,18 +25,17 @@ class ConvertSwagger(Convertible):
     def __init__(self, adaptee: adapters) -> None:
         self.adaptee = adaptee
 
-    def transform(self, path: str) -> str:
+    def transform(self, json_data: list) -> str:
         """Implementation to transform XML to swagger
-        :param xml: Format to transform
-        :return dict: transformed data
+        :param json_data: json to transform to dict
+        :return str: transformed data
         """
-        with open(path, "r", encoding="utf-8") as file:
-            data = file.read()
+        data = json.loads(json)
         return self.adaptee.execute(data)
 
 
-def xml_to_swagger(path: str) -> str:
+def json_to_swagger(json: list) -> str:
     """Utilitarian method to implement the transformation"""
-    adaptee = TransForm()
+    adaptee = TransFormOpenApi3()
     converter = ConvertSwagger(adaptee)
-    return converter.transform(path)
+    return converter.transform(json)
