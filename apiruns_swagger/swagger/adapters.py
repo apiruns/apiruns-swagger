@@ -31,7 +31,7 @@ class TransFormOpenApi3(Adaptee):
                 "servers": [{"url": "http://localhost:8080"}],
                 "paths": paths,
             }
-            return header   
+            return header
 
     def _build_method(self, method: str, schema: dict) -> dict:
         properties = {}
@@ -58,7 +58,6 @@ class TransFormOpenApi3(Adaptee):
                 },
             }
         }
-        if method == "get" or method == "delete":   
-           del open_api_schema[method]['requestBody']
+        if method == "get" or method == "delete":
+            del open_api_schema[method]["requestBody"]
         return open_api_schema
-        
