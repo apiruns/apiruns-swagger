@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-import json
 import yaml
 from apiruns_swagger.swagger import adapters
 from apiruns_swagger.swagger.adapters import TransFormOpenApi3
@@ -40,6 +39,23 @@ def json_to_swagger(json: list) -> dict:
     converter = ConvertSwagger(adaptee)
     return converter.transform(json)
 
+
 def json_to_yaml(json: list) -> str:
+    """List of Apiruns schema to swagger.
+
+    Args:
+        json (list): List of schema.
+        example:
+            {
+                "path": "/users",
+                "schema": {
+                    "name": "anybody",
+                    "last_name": "anybody",
+                }
+            }
+
+    Returns:
+        str: swagger schema.
+    """
     json_swagger = json_to_swagger(json)
     return yaml.dump(json_swagger, allow_unicode=True)
