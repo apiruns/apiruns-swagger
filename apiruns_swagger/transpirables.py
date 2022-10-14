@@ -33,15 +33,8 @@ class ConvertSwagger(Convertible):
         return self.adaptee.execute(json_data)
 
 
-def json_to_swagger(json: list) -> dict:
-    """Utilitarian method to implement the transformation"""
-    adaptee = TransFormOpenApi3()
-    converter = ConvertSwagger(adaptee)
-    return converter.transform(json)
-
-
-def json_to_yaml(json: list, servers: list) -> str:
-    """List of Apiruns schema to swagger.
+def json_to_swagger(json: list, servers: list) -> dict:
+    """Utilitarian method to implement the transformation
 
     Args:
         json (list): List of schema.
@@ -58,6 +51,16 @@ def json_to_yaml(json: list, servers: list) -> str:
             [{
                 "url": "https://api.cloud.apiruns.com",
             }]
+    Returns:
+        json: swagger schema.
+    """
+    adaptee = TransFormOpenApi3()
+    converter = ConvertSwagger(adaptee)
+    return converter.transform(json)
+
+
+def json_to_yaml(json: list, servers: list) -> str:
+    """List of Apiruns schema to swagger.
 
     Returns:
         str: swagger schema.
