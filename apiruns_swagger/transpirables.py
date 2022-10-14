@@ -40,7 +40,7 @@ def json_to_swagger(json: list) -> dict:
     return converter.transform(json)
 
 
-def json_to_yaml(json: list, servers) -> str:
+def json_to_yaml(json: list, servers: list) -> str:
     """List of Apiruns schema to swagger.
 
     Args:
