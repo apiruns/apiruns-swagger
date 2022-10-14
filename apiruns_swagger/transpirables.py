@@ -40,19 +40,24 @@ def json_to_swagger(json: list) -> dict:
     return converter.transform(json)
 
 
-def json_to_yaml(json: list) -> str:
+def json_to_yaml(json: list, servers) -> str:
     """List of Apiruns schema to swagger.
 
     Args:
         json (list): List of schema.
         example:
-            {
+            [{
                 "path": "/users",
                 "schema": {
                     "name": "anybody",
                     "last_name": "anybody",
                 }
-            }
+            }]
+        servers (list): List of servers.
+        example:
+            [{
+                "url": "https://api.cloud.apiruns.com",
+            }]
 
     Returns:
         str: swagger schema.

@@ -12,12 +12,14 @@ class Adaptee(ABC):
     """
 
     @abstractmethod
-    def execute(self, data: list) -> dict:
+    def execute(self, data: list, servers: list = []) -> dict:
         """Abstract method to execute transformation"""
 
 
 class TransFormOpenApi3(Adaptee):
-    def execute(self, data: list) -> typing.Union[dict, None]:
+    default_server = [{"url": "http://localhost:8080"}]
+
+    def execute(self, data: list, servers: list = []) -> typing.Union[dict, None]:
         paths = {}
         for endpoint in data:
             methods = {}
@@ -28,7 +30,7 @@ class TransFormOpenApi3(Adaptee):
             header = {
                 "openapi": "3.0.3",
                 "info": {"title": "Swagger doc - OpenAPI 3.0", "version": "1.0.11"},
-                "servers": [{"url": "http://localhost:8080"}],
+                "servers": self.default_server if not servers else servers,
                 "paths": paths,
             }
             return header
