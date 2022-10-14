@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "apiruns-swagger"
-version = "0.0.2"
+version = "0.0.3"
 description = "Swagger documentation for Apiruns projects."
 authors = ["Jose Salas <jose.salas@apiruns.com>"]
 license = "MIT"
