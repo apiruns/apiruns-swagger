@@ -25,12 +25,12 @@ class ConvertSwagger(Convertible):
     def __init__(self, adaptee: adapters) -> None:
         self.adaptee = adaptee
 
-    def transform(self, json_data: list) -> dict:
+    def transform(self, json_data: list, servers: list) -> dict:
         """Implementation to transform XML to swagger
         :param json_data: json to transform to dict
         :return str: transformed data
         """
-        return self.adaptee.execute(json_data)
+        return self.adaptee.execute(json_data, servers=servers)
 
 
 def json_to_swagger(json: list, servers: list = []) -> dict:
@@ -56,7 +56,7 @@ def json_to_swagger(json: list, servers: list = []) -> dict:
     """
     adaptee = TransFormOpenApi3()
     converter = ConvertSwagger(adaptee)
-    return converter.transform(json)
+    return converter.transform(json, servers=servers)
 
 
 def json_to_yaml(json: list, servers: list = []) -> str:
