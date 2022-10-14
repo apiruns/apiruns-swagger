@@ -33,7 +33,7 @@ class ConvertSwagger(Convertible):
         return self.adaptee.execute(json_data)
 
 
-def json_to_swagger(json: list, servers: list) -> dict:
+def json_to_swagger(json: list, servers: list = []) -> dict:
     """Utilitarian method to implement the transformation
 
     Args:
@@ -59,7 +59,7 @@ def json_to_swagger(json: list, servers: list) -> dict:
     return converter.transform(json)
 
 
-def json_to_yaml(json: list, servers: list) -> str:
+def json_to_yaml(json: list, servers: list = []) -> str:
     """List of Apiruns schema to swagger.
 
     Returns:
