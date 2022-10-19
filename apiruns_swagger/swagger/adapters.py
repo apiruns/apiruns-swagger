@@ -35,18 +35,21 @@ class TransFormOpenApi3(Adaptee):
 
     def execute(self, data: list, servers: list = []) -> typing.Union[dict, None]:
         paths = {}
+        tags = []
         for endpoint in data:
             methods = {}
             methods_modificable = {}
+            tag = endpoint['path'] if not endpoint['path'].startswith("/") else endpoint['path'][1:]
             for action, method in ACTIONS:
                 if action in ACTIONS_WITH_ID:
-                    methods_modificable.update(self._build_method(method, action, endpoint["schema"]))
+                    methods_modificable.update(self._build_method(method, action, tag, endpoint["schema"]))
                 else:
-                    methods.update(self._build_method(method, action, endpoint["schema"]))
+                    methods.update(self._build_method(method, action, tag, endpoint["schema"]))
 
             path = f"{endpoint['path']}/{{id}}"
             paths.update({path: methods_modificable})
-            paths.update({endpoint["path"]: methods})
+            paths.update({endpoint['path']: methods})
+            tags.append({"name": tag, "description": "without description."})
 
         if paths:
             header = {
@@ -54,10 +57,11 @@ class TransFormOpenApi3(Adaptee):
                 "info": {"title": "Swagger doc - OpenAPI 3.0", "version": "1.0.11"},
                 "servers": self.default_server if not servers else servers,
                 "paths": paths,
+                "tags": tags
             }
             return header
 
-    def _build_method(self, method: str, action: str, schema: dict) -> dict:
+    def _build_method(self, method: str, action: str, tag: str, schema: dict) -> dict:
         properties = {}
         for proper, definition in schema.items():
             properties[proper] = {"type": definition["type"]}
@@ -82,6 +86,7 @@ class TransFormOpenApi3(Adaptee):
         open_api_schema = {
             method: {
                 **params,
+                "tags": [tag],
                 "requestBody": request_body,
                 "responses": {
                     status_code: {

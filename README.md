@@ -17,12 +17,17 @@ apiruns_schema = [
             "path": "/users",
             "schema": {
                 "name": {"type": "string"},
-                "last_name": {"type": "string"},
+            }
+        },
+        {
+            "path": "/inventory",
+            "schema": {
+                "price": {"type": "integer"},
             }
         }
-    ]   
+    ]
 
-servers = [{"url": "https://api.cloud.apiruns.com"}]
+servers = [{"url": "https://google.cloud.apiruns.com"}]
 
 swagger_schema = json_to_swagger(apiruns_schema, servers=servers)
 ```
