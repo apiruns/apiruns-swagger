@@ -2,6 +2,20 @@ from abc import ABC, abstractmethod
 import typing
 
 METHODS = ["get", "post", "put", "patch", "delete"]
+ACTIONS = [
+    ("list", "get"),
+    ("retrieve", "get"),
+    ("create", "post"),
+    ("parcial_update", "patch"),
+    ("update", "put"),
+    ("destroy", "delete"),
+]
+ACTIONS_WITH_ID = (
+    "retrieve",
+    "parcial_update",
+    "update",
+    "destroy"
+)
 
 
 class Adaptee(ABC):
@@ -21,31 +35,61 @@ class TransFormOpenApi3(Adaptee):
 
     def execute(self, data: list, servers: list = []) -> typing.Union[dict, None]:
         paths = {}
+        tags = []
         for endpoint in data:
             methods = {}
-            for method in METHODS:
-                methods.update(self._build_method(method, endpoint["schema"]))
-            paths.update({endpoint["path"]: methods})
+            methods_modificable = {}
+            tag = endpoint['path'] if not endpoint['path'].startswith("/") else endpoint['path'][1:]
+            for action, method in ACTIONS:
+                if action in ACTIONS_WITH_ID:
+                    methods_modificable.update(self._build_method(method, action, tag, endpoint["schema"]))
+                else:
+                    methods.update(self._build_method(method, action, tag, endpoint["schema"]))
+
+            path = f"{endpoint['path']}/{{id}}"
+            paths.update({path: methods_modificable})
+            paths.update({endpoint['path']: methods})
+            tags.append({"name": tag, "description": "without description."})
+
         if paths:
             header = {
                 "openapi": "3.0.3",
                 "info": {"title": "Swagger doc - OpenAPI 3.0", "version": "1.0.11"},
                 "servers": self.default_server if not servers else servers,
                 "paths": paths,
+                "tags": tags
             }
             return header
 
-    def _build_method(self, method: str, schema: dict) -> dict:
+    def _build_method(self, method: str, action: str, tag: str, schema: dict) -> dict:
         properties = {}
         for proper, definition in schema.items():
             properties[proper] = {"type": definition["type"]}
         schema = {"schema": {"type": "object", "properties": properties}}
         request_body = {"content": {"application/json": schema}}
+        status_code = "201" if method == "post" else "200"
+        params = {}
+        if action in ACTIONS_WITH_ID:
+            params = {
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id of the resource.",
+                        "required": True,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
         open_api_schema = {
             method: {
+                **params,
+                "tags": [tag],
                 "requestBody": request_body,
                 "responses": {
-                    "200": {
+                    status_code: {
                         "description": "Successful operation",
                         "content": {
                             "application/json": {
